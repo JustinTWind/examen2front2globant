@@ -6,7 +6,12 @@ function Menu({ registros = [] }) {
   return (
     <header className="menu">
       <NavLink to="/" className="menu__logo" end>
-        NutriTrack
+        <img
+          src="/diet.png"
+          alt="Logo de NutriTrack"
+          className="menu__logo-imagen"
+        />
+        <span>NutriTrack</span>
       </NavLink>
       <nav className="menu__nav" aria-label="Navegación principal">
         <NavLink

@@ -13,7 +13,7 @@ function CuidadoNutricional({
 
   if (!registroActivo) {
     return (
-      <section className="pagina">
+      <section className="pagina pagina--cuidado">
         <h1>Cuidado nutricional</h1>
         <p>Aún no hay un registro guardado.</p>
         <button
@@ -31,7 +31,7 @@ function CuidadoNutricional({
     registros.length > 0 ? registros : [registroActivo];
 
   return (
-    <section className="pagina">
+    <section className="pagina pagina--cuidado">
       <h1>Cuidado nutricional</h1>
 
       {registrosGuardados.length > 1 ? (

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CampoFormulario from "../components/CampoFormulario.jsx";
 
@@ -22,7 +22,7 @@ const validarNombre = (nombre) => {
   if (nombre.trim().length < 3) {
     return "El nombre debe tener al menos 3 caracteres.";
   }
-  if (!/^[A-Za-zÁÉÍÓÚáéíóúÜüÑñ\s]+$/.test(nombre.trim())) {
+  if (!/^\p{L}+(?: \p{L}+)*$/u.test(nombre.trim())) {
     return "El nombre solo puede contener letras y espacios.";
   }
   return "";
@@ -67,6 +67,10 @@ const validarFecha = (fecha) => {
   const fechaRegistro = new Date(`${fecha}T00:00:00`);
   const hoy = new Date();
   hoy.setHours(0, 0, 0, 0);
+
+  if (Number.isNaN(fechaRegistro.getTime())) {
+    return "La fecha no es válida.";
+  }
 
   if (fechaRegistro > hoy) {
     return "La fecha no puede ser posterior al día de hoy.";
@@ -128,7 +132,6 @@ const validarActividadFisica = (actividadFisica) => {
   return "";
 };
 
-
 const validadores = {
   nombre: validarNombre,
   correo: validarCorreo,
@@ -144,6 +147,7 @@ const validadores = {
 
 function RegistroComidas({ onGuardarRegistro }) {
   const navigate = useNavigate();
+  const formularioRef = useRef(null);
   const [formulario, setFormulario] = useState(estadoInicial);
   const [errores, setErrores] = useState({});
 
@@ -178,12 +182,18 @@ function RegistroComidas({ onGuardarRegistro }) {
     });
 
     const erroresFiltrados = Object.fromEntries(
-      Object.entries(nuevosErrores).filter(([, mensaje]) => mensaje)
+      Object.entries(nuevosErrores).filter(([, mensaje]) => mensaje),
     );
 
     setErrores(erroresFiltrados);
 
     if (Object.keys(erroresFiltrados).length > 0) {
+      const primerCampo = Object.keys(erroresFiltrados)[0];
+      const elemento = formularioRef.current?.querySelector(
+        primerCampo === "actividadFisica" ? "#actividad-si" : `#${primerCampo}`,
+      );
+      elemento?.focus();
+      elemento?.scrollIntoView({ behavior: "smooth", block: "center" });
       return;
     }
 
@@ -199,7 +209,12 @@ function RegistroComidas({ onGuardarRegistro }) {
         obligatorios.
       </p>
 
-      <form className="formulario" onSubmit={manejarEnvio} noValidate>
+      <form
+        ref={formularioRef}
+        className="formulario"
+        onSubmit={manejarEnvio}
+        noValidate
+      >
         <CampoFormulario
           id="nombre"
           etiqueta="Nombre completo"
@@ -212,6 +227,8 @@ function RegistroComidas({ onGuardarRegistro }) {
             value={formulario.nombre}
             onChange={manejarCambio}
             onBlur={manejarBlur}
+            aria-invalid={Boolean(errores.nombre)}
+            aria-describedby={errores.nombre ? "nombre-error" : undefined}
           />
         </CampoFormulario>
 
@@ -227,6 +244,8 @@ function RegistroComidas({ onGuardarRegistro }) {
             value={formulario.correo}
             onChange={manejarCambio}
             onBlur={manejarBlur}
+            aria-invalid={Boolean(errores.correo)}
+            aria-describedby={errores.correo ? "correo-error" : undefined}
           />
         </CampoFormulario>
 
@@ -238,6 +257,8 @@ function RegistroComidas({ onGuardarRegistro }) {
             value={formulario.edad}
             onChange={manejarCambio}
             onBlur={manejarBlur}
+            aria-invalid={Boolean(errores.edad)}
+            aria-describedby={errores.edad ? "edad-error" : undefined}
           />
         </CampoFormulario>
 
@@ -254,6 +275,8 @@ function RegistroComidas({ onGuardarRegistro }) {
             value={formulario.peso}
             onChange={manejarCambio}
             onBlur={manejarBlur}
+            aria-invalid={Boolean(errores.peso)}
+            aria-describedby={errores.peso ? "peso-error" : undefined}
           />
         </CampoFormulario>
 
@@ -269,6 +292,8 @@ function RegistroComidas({ onGuardarRegistro }) {
             value={formulario.fecha}
             onChange={manejarCambio}
             onBlur={manejarBlur}
+            aria-invalid={Boolean(errores.fecha)}
+            aria-describedby={errores.fecha ? "fecha-error" : undefined}
           />
         </CampoFormulario>
 
@@ -283,6 +308,10 @@ function RegistroComidas({ onGuardarRegistro }) {
             value={formulario.tipoComida}
             onChange={manejarCambio}
             onBlur={manejarBlur}
+            aria-invalid={Boolean(errores.tipoComida)}
+            aria-describedby={
+              errores.tipoComida ? "tipoComida-error" : undefined
+            }
           >
             <option value="">Selecciona una opción</option>
             <option value="Desayuno">Desayuno</option>
@@ -304,6 +333,10 @@ function RegistroComidas({ onGuardarRegistro }) {
             value={formulario.descripcion}
             onChange={manejarCambio}
             onBlur={manejarBlur}
+            aria-invalid={Boolean(errores.descripcion)}
+            aria-describedby={
+              errores.descripcion ? "descripcion-error" : undefined
+            }
           />
         </CampoFormulario>
 
@@ -319,6 +352,8 @@ function RegistroComidas({ onGuardarRegistro }) {
             value={formulario.calorias}
             onChange={manejarCambio}
             onBlur={manejarBlur}
+            aria-invalid={Boolean(errores.calorias)}
+            aria-describedby={errores.calorias ? "calorias-error" : undefined}
           />
         </CampoFormulario>
 
@@ -334,11 +369,16 @@ function RegistroComidas({ onGuardarRegistro }) {
             value={formulario.vasosAgua}
             onChange={manejarCambio}
             onBlur={manejarBlur}
+            aria-invalid={Boolean(errores.vasosAgua)}
+            aria-describedby={errores.vasosAgua ? "vasosAgua-error" : undefined}
           />
         </CampoFormulario>
 
         <fieldset
           className={`campo ${errores.actividadFisica ? "campo--error" : ""}`}
+          aria-describedby={
+            errores.actividadFisica ? "actividadFisica-error" : undefined
+          }
         >
           <legend>¿Realizó actividad física?</legend>
           <div className="campo__radios">
@@ -351,6 +391,7 @@ function RegistroComidas({ onGuardarRegistro }) {
                 checked={formulario.actividadFisica === "Sí"}
                 onChange={manejarCambio}
                 onBlur={manejarBlur}
+                aria-invalid={Boolean(errores.actividadFisica)}
               />
               Sí
             </label>
@@ -363,12 +404,13 @@ function RegistroComidas({ onGuardarRegistro }) {
                 checked={formulario.actividadFisica === "No"}
                 onChange={manejarCambio}
                 onBlur={manejarBlur}
+                aria-invalid={Boolean(errores.actividadFisica)}
               />
               No
             </label>
           </div>
           {errores.actividadFisica ? (
-            <p className="campo__error" role="alert">
+            <p className="campo__error" id="actividadFisica-error" role="alert">
               {errores.actividadFisica}
             </p>
           ) : null}

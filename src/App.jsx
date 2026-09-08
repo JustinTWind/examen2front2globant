@@ -10,7 +10,7 @@ const STORAGE_KEY = "nutritrack_registros";
 
 function App() {
   const [registros, setRegistros] = useState(() => {
-    const guardados = sessionStorage.getItem(STORAGE_KEY);
+    const guardados = localStorage.getItem(STORAGE_KEY);
     if (!guardados) return [];
 
     try {
@@ -21,7 +21,7 @@ function App() {
   });
 
   useEffect(() => {
-    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(registros));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(registros));
   }, [registros]);
 
   const ultimoRegistro = useMemo(
@@ -35,7 +35,7 @@ function App() {
 
   const limpiarRegistros = () => {
     setRegistros([]);
-    sessionStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(STORAGE_KEY);
   };
 
   return (

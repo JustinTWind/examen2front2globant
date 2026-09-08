@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link } from "react-router-dom";
 
 function NoEncontrado() {
   return (
@@ -9,7 +9,7 @@ function NoEncontrado() {
         Volver al inicio
       </Link>
     </section>
-  )
+  );
 }
 
-export default NoEncontrado
+export default NoEncontrado;
