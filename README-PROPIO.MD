@@ -5,6 +5,8 @@
 - **Nombre de los estudiantes:** Justin Londoño Cárdenas y Daniel Moreno Casas
 - **Grupo:** Grupo Dual Globant
 
+## Github page - https://justintwind.github.io/examen2front2globant/
+
 ## Descripción de la aplicación
 
 NutriTrack es una aplicación web desarrollada con React para registrar y consultar información diaria relacionada con la alimentación y los hábitos saludables. La aplicación permite ingresar los datos personales del usuario, registrar una comida, consultar un resumen nutricional y recibir recomendaciones según la información registrada.
