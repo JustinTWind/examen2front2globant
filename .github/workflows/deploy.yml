@@ -1,9 +1,9 @@
 name: Deploy to GitHub Pages
 
 on:
-  # Se ejecuta automáticamente cada vez que haces un push a la rama 'main'
+  # Se ejecuta automáticamente cada vez que haces un push a la rama 'develop'
   push:
-    branches: ["main"]
+    branches: ["develop"]
   # Te permite ejecutar el despliegue manualmente desde la pestaña de Actions
   workflow_dispatch:
 
