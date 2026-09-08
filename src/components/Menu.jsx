@@ -7,7 +7,7 @@ function Menu({ registros = [] }) {
     <header className="menu">
       <NavLink to="/" className="menu__logo" end>
         <img
-          src="/diet.png"
+          src={`${import.meta.env.BASE_URL}diet.png`}
           alt="Logo de NutriTrack"
           className="menu__logo-imagen"
         />
